@@ -20,6 +20,12 @@ const buscarUsuarios = async () => {
   return usuarios;
 };
 
+const getUserById = async (id) => {
+  const [usuario] = await connection.execute('SELECT * FROM usuarios WHERE id = ?', [id]);
+  return usuario.length > 0 ? usuario[0] : null;
+};
+
+
 const putUser = async (id, newData) => {
   try {
     // Converte o ID para um número inteiro
@@ -65,11 +71,10 @@ const buscarUsuarioPorEmailSenha = async (email, senha) => {
   return null;
 };
 
-
-
 module.exports = {
   cadastrarUsuario,
   buscarUsuarios,
   putUser,
-  buscarUsuarioPorEmailSenha
+  buscarUsuarioPorEmailSenha,
+  getUserById
 };
