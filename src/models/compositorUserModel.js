@@ -10,11 +10,11 @@ const getComposicoesByUsuarioId = async (usuarioId) => {
 };
 
 const cadastrarComposicao = async (composicaoData) => {
-  const { usuarioId, imagemCapa, audio, titulo, generoMusicalId, texto } = composicaoData;
+  const { usuarioId, imagem_capa, audio, title, genero_musical_id, texto  } = composicaoData;
   
   const result = await connection.execute(
     'INSERT INTO composicoes (usuario_id, imagem_capa, audio, titulo, genero_musical_id, texto) VALUES (?, ?, ?, ?, ?, ?)',
-    [usuarioId, imagemCapa, audio, titulo, generoMusicalId, texto]
+    [usuarioId, imagem_capa, audio, title, genero_musical_id, texto ]
   );
 
   return result.insertId;
@@ -23,5 +23,4 @@ const cadastrarComposicao = async (composicaoData) => {
 module.exports = {
   getComposicoesByUsuarioId,
   cadastrarComposicao,
-  
 };

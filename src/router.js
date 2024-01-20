@@ -16,11 +16,13 @@ router.use(authMiddleware);
 
 // Rotas protegidas (requerem autenticação)
 router.get('/generos', generosControllers.getAllGeneros);
-router.get('/usuarios',authMiddleware, userControllers.getAllUsuarios);
+
+router.get('/usuarios', userControllers.getAllUsuarios);
+router.get('/usuarios/:id',  userControllers.getUserById);
 router.put('/usuarios/updateUser/:id', userControllers.putUser);
 
 router.get('/composicoes/', composicaoControllers.getAllComposicoes);
-router.get('/composicoesUser', composicoesUserController.getComposicoesByUsuarioId);
+router.get('/composicoesUser/:id', composicoesUserController.getComposicoesByUsuarioId);
 router.post('/cadastro/ComposicaoUser', composicoesUserController.cadastrarComposicao);
 
 
