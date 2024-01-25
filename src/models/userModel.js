@@ -31,10 +31,8 @@ const putUser = async (id, newData) => {
     // Converte o ID para um número inteiro
     const userId = number(id);
 
-    console.log('ID Recebido:', id);
-
-    const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone } = newData;
-    const camposAtualizaveis = ['nome_completo', 'email', 'senha', 'tipo_usuario_id', 'genero_musical_id', 'numero_telefone'];
+    const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone,imagem_perfil } = newData;
+    const camposAtualizaveis = ['nome_completo', 'email', 'senha', 'tipo_usuario_id', 'genero_musical_id', 'numero_telefone', 'imagem_perfil'];
 
     const camposParaAtualizar = camposAtualizaveis.filter(campo => newData[campo] !== undefined);
 

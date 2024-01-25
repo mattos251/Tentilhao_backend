@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const gerarTokenAutenticacao = (credentios) => {
     const jwtSecret = process.env.JWT_SECRET || 'seuSegredoSuperSecreto';
-    return jwt.sign(credentios, jwtSecret, { expiresIn: '1h' });
+    return jwt.sign(credentios, jwtSecret, { expiresIn: '1d' });
 };
 
 const loginUsuario = async (req, res) => {
@@ -23,10 +23,10 @@ const loginUsuario = async (req, res) => {
             return res.status(401).json({ message: 'Credenciais inválidas: Senha incorreta' });
         }
 
-        const token = gerarTokenAutenticacao({ userId: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email});
+        const token = gerarTokenAutenticacao({ userId: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id  });
 
         // Enviar dados do usuário junto com o token
-        res.status(200).json({ message: 'Login bem-sucedido', token, user: { id: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email } });
+        res.status(200).json({ message: 'Login bem-sucedido', token, user: { id: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email,imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id } });
     } catch (error) {
         console.error('Erro no login de usuário:', error);
         res.status(500).json({ message: 'Erro no login de usuário.' });
@@ -62,7 +62,7 @@ const getUserById = async (req, res) => {
 
 const cadastrarUsuario = async (req, res) => {
     try {
-        const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone } = req.body;
+        const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone, imagem_perfil } = req.body;
 
         // Hash da senha antes de armazenar no banco de dados
         const token = await bcrypt.hash(senha, 10);
@@ -75,6 +75,7 @@ const cadastrarUsuario = async (req, res) => {
             tipo_usuario_id,
             genero_musical_id,
             numero_telefone,
+            imagem_perfil
         });
 
         res.status(201).json({ message: 'Usuário cadastrado com sucesso!', usuario: novoUsuario });
