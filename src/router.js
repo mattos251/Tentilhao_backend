@@ -11,11 +11,11 @@ const router = express.Router();
 router.post('/usuarios/cadastro', userControllers.cadastrarUsuario);
 router.post('/login', userControllers.loginUsuario);
 
+router.get('/generos', generosControllers.getAllGeneros);
 // Middleware de autenticação aplicado a partir deste ponto
 router.use(authMiddleware);
 
 // Rotas protegidas (requerem autenticação)
-router.get('/generos', generosControllers.getAllGeneros);
 
 router.get('/usuarios', userControllers.getAllUsuarios);
 router.get('/usuarios/:id',  userControllers.getUserById);
@@ -24,6 +24,6 @@ router.put('/usuarios/updateUser/:id', userControllers.putUser);
 router.get('/composicoes/', composicaoControllers.getAllComposicoes);
 router.get('/composicoesUser/:id', composicoesUserController.getComposicoesByUsuarioId);
 router.post('/cadastro/ComposicaoUser', composicoesUserController.cadastrarComposicao);
-
+router.post('/atualizar/Composicao', composicoesUserController.atualizarComposicao);
 
 module.exports = router;

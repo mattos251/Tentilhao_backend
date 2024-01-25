@@ -26,8 +26,23 @@ const cadastrarComposicao = async (req, res) => {
   }
 };
 
+const atualizarComposicao = async (req, res) => {
+  try {
+    const composicaoId = req.params.id;
+    const { imagem_capa, audio, title, genero_musical_id, texto } = req.body;
+    const composicaoData = { imagem_capa, audio, title, genero_musical_id, texto };
+    
+    await composicoesUserModel.atualizarComposicao(composicaoId, composicaoData);
+    
+    res.status(200).json({ message: 'Composição atualizada com sucesso.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao atualizar composição.' });
+  }
+};
+
 
 module.exports = {
   getComposicoesByUsuarioId,
-  cadastrarComposicao
+  cadastrarComposicao,
+  atualizarComposicao
 };

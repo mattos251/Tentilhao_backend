@@ -20,7 +20,17 @@ const cadastrarComposicao = async (composicaoData) => {
   return result.insertId;
 };
 
+const atualizarComposicao = async (composicaoId, composicaoData) => {
+  const { imagem_capa, audio, title, genero_musical_id, texto } = composicaoData;
+
+  await connection.execute(
+    'UPDATE composicoes SET imagem_capa=?, audio=?, titulo=?, genero_musical_id=?, texto=? WHERE id=?',
+    [imagem_capa, audio, title, genero_musical_id, texto, composicaoId]
+  );
+};
+
 module.exports = {
   getComposicoesByUsuarioId,
   cadastrarComposicao,
+  atualizarComposicao
 };
