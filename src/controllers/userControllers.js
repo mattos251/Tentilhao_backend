@@ -23,10 +23,10 @@ const loginUsuario = async (req, res) => {
             return res.status(401).json({ message: 'Credenciais inválidas: Senha incorreta' });
         }
 
-        const token = gerarTokenAutenticacao({ userId: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id  });
+        const token = gerarTokenAutenticacao({ userId: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id });
 
         // Enviar dados do usuário junto com o token
-        res.status(200).json({ message: 'Login bem-sucedido', token, user: { id: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email,imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id } });
+        res.status(200).json({ message: 'Login bem-sucedido', token, user: { id: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id } });
     } catch (error) {
         console.error('Erro no login de usuário:', error);
         res.status(500).json({ message: 'Erro no login de usuário.' });
@@ -57,6 +57,17 @@ const getUserById = async (req, res) => {
     } catch (error) {
         console.error('Erro ao obter usuário por ID:', error);
         res.status(500).json({ message: 'Erro ao obter usuário por ID.' });
+    }
+};
+
+const pesquisarUsuarios = async (req, res) => {
+    try {
+        const { termoPesquisa } = req.query;
+        const usuarios = await UserModel.pesquisarUsuarios(termoPesquisa);
+        res.status(200).json({ usuarios });
+    } catch (error) {
+        console.error('Erro ao pesquisar usuários:', error);
+        res.status(500).json({ message: 'Erro ao pesquisar usuários.' });
     }
 };
 
@@ -105,11 +116,30 @@ const putUser = async (req, res) => {
 
     }
 }
+const putImageUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const newData = { imagem_perfil: req.body.imagem_perfil };
+
+        const editadoComSucesso = await UserModel.putImageUser(id, newData);
+
+        if (editadoComSucesso) {
+            res.status(200).json({ message: "Imagem do usuário editada com sucesso!" });
+        } else {
+            res.status(404).json({ message: 'Usuário não encontrado ou nenhum dado foi alterado.' });
+        }
+    } catch (error) {
+        console.error('Erro ao editar imagem do usuário:', error);
+        res.status(500).json({ message: 'Erro ao editar imagem do usuário.' });
+    }
+};
 
 module.exports = {
     cadastrarUsuario,
     getAllUsuarios,
     putUser,
     loginUsuario,
-    getUserById
+    getUserById,
+    putImageUser,
+    pesquisarUsuarios
 };

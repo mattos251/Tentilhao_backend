@@ -29,8 +29,18 @@ const atualizarComposicao = async (composicaoId, composicaoData) => {
   );
 };
 
+const deletarComposicao = async (composicaoId, composicaoData) => {
+  const {id } = composicaoData;
+
+  await connection.execute(
+    'DELETE FROM composicoes WHERE id = ?',
+    [composicaoId]
+  );
+};
+
 module.exports = {
   getComposicoesByUsuarioId,
   cadastrarComposicao,
-  atualizarComposicao
+  atualizarComposicao,
+  deletarComposicao
 };

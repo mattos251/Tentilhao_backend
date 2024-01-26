@@ -17,13 +17,16 @@ router.use(authMiddleware);
 
 // Rotas protegidas (requerem autenticação)
 
+router.get('/usuarios/pesquisar', userControllers.pesquisarUsuarios);
 router.get('/usuarios', userControllers.getAllUsuarios);
 router.get('/usuarios/:id',  userControllers.getUserById);
 router.put('/usuarios/updateUser/:id', userControllers.putUser);
+router.put('/usuarios/updateImage/:id', userControllers.putImageUser);
 
 router.get('/composicoes/', composicaoControllers.getAllComposicoes);
 router.get('/composicoesUser/:id', composicoesUserController.getComposicoesByUsuarioId);
 router.post('/cadastro/ComposicaoUser', composicoesUserController.cadastrarComposicao);
 router.post('/atualizar/Composicao', composicoesUserController.atualizarComposicao);
+router.delete('/deletar/Composicao/:id', composicoesUserController.deletarComposicao);
 
 module.exports = router;

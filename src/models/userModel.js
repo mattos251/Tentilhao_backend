@@ -25,6 +25,13 @@ const getUserById = async (id) => {
   return usuario.length > 0 ? usuario[0] : null;
 };
 
+const pesquisarUsuarios = async (termoPesquisa) => {
+  const [usuarios] = await connection.execute(
+    'SELECT * FROM usuarios WHERE nome_completo LIKE ? OR email LIKE ?',
+    [`%${termoPesquisa}%`, `%${termoPesquisa}%`]
+  );
+  return usuarios;
+};
 
 const putUser = async (id, newData) => {
   try {
@@ -69,10 +76,32 @@ const buscarUsuarioPorEmailSenha = async (email, senha) => {
   return null;
 };
 
+const putImageUser = async (id, newData) => {
+  try {
+    const userId = Number(id);
+    const { imagem_perfil } = newData;
+
+    if (!imagem_perfil) {
+      return false;
+    }
+
+    const query = 'UPDATE usuarios SET imagem_perfil=? WHERE id=?';
+
+    const [result] = await connection.execute(query, [imagem_perfil, userId]);
+
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error('Erro ao editar a imagem do usuário:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   cadastrarUsuario,
   buscarUsuarios,
   putUser,
   buscarUsuarioPorEmailSenha,
-  getUserById
+  getUserById,
+  putImageUser,
+  pesquisarUsuarios
 };
