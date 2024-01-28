@@ -23,10 +23,10 @@ const loginUsuario = async (req, res) => {
             return res.status(401).json({ message: 'Credenciais inválidas: Senha incorreta' });
         }
 
-        const token = gerarTokenAutenticacao({ userId: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id });
+        const token = gerarTokenAutenticacao({ userId: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id, numero_telefone: usuario.numero_telefone, senha: usuario.senha });
 
         // Enviar dados do usuário junto com o token
-        res.status(200).json({ message: 'Login bem-sucedido', token, user: { id: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id } });
+        res.status(200).json({ message: 'Login bem-sucedido', token, user: { id: usuario.id, nome_completo: usuario.nome_completo, email: usuario.email, imagem_perfil: usuario.imagem_perfil, tipo_usuario_id: usuario.tipo_usuario_id, umero_telefone: usuario.numero_telefone, senha: usuario.senha } });
     } catch (error) {
         console.error('Erro no login de usuário:', error);
         res.status(500).json({ message: 'Erro no login de usuário.' });
@@ -99,8 +99,10 @@ const cadastrarUsuario = async (req, res) => {
 
 const putUser = async (req, res) => {
     try {
-        const { id } = req.params;
+        const  id  = req.params.id;
+        console.log('banana',id)
         const newData = req.body;
+        console.log('açai',req.body)
 
         const editadoComSucesso = await UserModel.putUser(id, newData);
 
@@ -113,7 +115,6 @@ const putUser = async (req, res) => {
     } catch (error) {
         console.error('Erro ao editar usuário:', error);
         res.status(500).json({ message: 'Erro ao editar usuário.' });
-
     }
 }
 const putImageUser = async (req, res) => {

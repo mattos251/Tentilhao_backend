@@ -36,12 +36,15 @@ const pesquisarUsuarios = async (termoPesquisa) => {
 const putUser = async (id, newData) => {
   try {
     // Converte o ID para um número inteiro
-    const userId = number(id);
+    const userId = id;
+    console.log('userId ', userId )
 
-    const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone,imagem_perfil } = newData;
+    const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone, imagem_perfil } = newData;
     const camposAtualizaveis = ['nome_completo', 'email', 'senha', 'tipo_usuario_id', 'genero_musical_id', 'numero_telefone', 'imagem_perfil'];
 
     const camposParaAtualizar = camposAtualizaveis.filter(campo => newData[campo] !== undefined);
+
+    console.log('camposParaAtualizar', camposParaAtualizar)
 
     if (camposParaAtualizar.length === 0) {
       return false;

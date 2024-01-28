@@ -29,9 +29,17 @@ const cadastrarComposicao = async (req, res) => {
 const atualizarComposicao = async (req, res) => {
   try {
     const composicaoId = req.params.id;
-    const { imagem_capa, audio, title, genero_musical_id, texto } = req.body;
-    const composicaoData = { imagem_capa, audio, title, genero_musical_id, texto };
+    // console.log(" req.params.id",  req.params.id)
     
+    const { usuario_id, imagem_capa, audio, titulo, genero_musical_id, texto } = req.body;
+    console.log('req.body', req.body)
+
+    if (!composicaoId) {
+      return res.status(400).json({ message: 'O ID da composição é obrigatório para a atualização.' });
+    }
+
+    const composicaoData = { usuario_id , imagem_capa, audio, titulo, genero_musical_id, texto };
+
     await composicoesUserModel.atualizarComposicao(composicaoId, composicaoData);
     
     res.status(200).json({ message: 'Composição atualizada com sucesso.' });
