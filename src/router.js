@@ -26,7 +26,7 @@ router.put('/usuarios/updateImage/:id', userControllers.putImageUser);
 router.get('/composicoes/', composicaoControllers.getAllComposicoes);
 router.get('/composicoesUser/:id', composicoesUserController.getComposicoesByUsuarioId);
 router.post('/cadastro/ComposicaoUser', composicoesUserController.cadastrarComposicao);
-router.post('/atualizar/Composicao', composicoesUserController.atualizarComposicao);
+router.put('/atualizar/Composicao/:id', composicoesUserController.atualizarComposicao);
 router.delete('/deletar/Composicao/:id', composicoesUserController.deletarComposicao);
 
 module.exports = router;
