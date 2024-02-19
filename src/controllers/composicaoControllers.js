@@ -1,3 +1,4 @@
+const { response } = require('express');
 const composicaoModel = require('../models/composicaoModel')
 
 const getAllComposicoes = async (request, response) => {
@@ -8,6 +9,16 @@ const getAllComposicoes = async (request, response) => {
 
 };
 
+
+const getAllComposicoesByGenres = async (request, response) => {
+    const genero = request.params.genero; // ou de acordo com sua lógica de roteamento
+    
+    const composicaoGenero = await composicaoModel.getAllComposicoesByGenres(genero);
+
+    return response.status(200).json(composicaoGenero);
+}
+
 module.exports = {
-    getAllComposicoes
+    getAllComposicoes,
+    getAllComposicoesByGenres
 }
