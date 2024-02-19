@@ -19,12 +19,14 @@ router.use(authMiddleware);
 
 router.get('/usuarios/pesquisar', userControllers.pesquisarUsuarios);
 router.get('/usuarios', userControllers.getAllUsuarios);
-router.get('/usuarios/:id',  userControllers.getUserById);
+router.get('/usuario/:id',  userControllers.getUserById);
 router.put('/usuarios/updateUser/:id', userControllers.putUser);
 router.put('/usuarios/updateImage/:id', userControllers.putImageUser);
 
 router.get('/composicoes/', composicaoControllers.getAllComposicoes);
 router.get('/composicoesUser/:id', composicoesUserController.getComposicoesByUsuarioId);
+router.get('/composicoesGeneros/:genero', composicaoControllers.getAllComposicoesByGenres);
+
 router.post('/cadastro/ComposicaoUser', composicoesUserController.cadastrarComposicao);
 router.put('/atualizar/Composicao/:id', composicoesUserController.atualizarComposicao);
 router.delete('/deletar/Composicao/:id', composicoesUserController.deletarComposicao);
