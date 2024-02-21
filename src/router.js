@@ -27,8 +27,8 @@ router.get('/composicoes/', composicaoControllers.getAllComposicoes);
 router.get('/composicoesUser/:id', composicoesUserController.getComposicoesByUsuarioId);
 router.get('/composicoesGeneros/:genero', composicaoControllers.getAllComposicoesByGenres);
 
-router.post('/cadastro/ComposicaoUser', composicoesUserController.cadastrarComposicao);
-router.put('/atualizar/Composicao/:id', composicoesUserController.atualizarComposicao);
-router.delete('/deletar/Composicao/:id', composicoesUserController.deletarComposicao);
+router.post('/cadastro/ComposicaoUser', composicoesUserController.postComposicaoByUsuario);
+router.put('/atualizar/Composicao/:id', composicoesUserController.putComposicaoByUsuario);
+router.delete('/deletar/Composicao/:id', composicoesUserController.deleteComposicaoByUsuario);
 
 module.exports = router;
