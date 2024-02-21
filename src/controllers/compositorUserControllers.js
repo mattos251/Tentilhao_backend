@@ -15,18 +15,18 @@ const getComposicoesByUsuarioId = async (req, res) => {
   }
 };
 
-const cadastrarComposicao = async (req, res) => {
+const postComposicaoByUsuario = async (req, res) => {
   try {
     const { usuarioId, imagem_capa, audio, title, genero_musical_id, texto } = req.body;
     const composicaoData = { usuarioId, imagem_capa, audio, title, genero_musical_id, texto  };
-    const composicaoId = await composicoesUserModel.cadastrarComposicao(composicaoData);
+    const composicaoId = await composicoesUserModel.postComposicaoByUsuario(composicaoData);
     res.status(201).json({ composicaoId });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao cadastrar composição.' });
   }
 };
 
-const atualizarComposicao = async (req, res) => {
+const putComposicaoByUsuario = async (req, res) => {
   try {
     const composicaoId = req.params.id;
     // console.log(" req.params.id",  req.params.id)
@@ -40,20 +40,20 @@ const atualizarComposicao = async (req, res) => {
 
     const composicaoData = { usuario_id , imagem_capa, audio, titulo, genero_musical_id, texto };
 
-    await composicoesUserModel.atualizarComposicao(composicaoId, composicaoData);
+    await composicoesUserModel.putComposicaoByUsuario(composicaoId, composicaoData);
     
     res.status(200).json({ message: 'Composição atualizada com sucesso.' });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao atualizar composição.' });
   }
 };
-const deletarComposicao = async (req, res) => {
+const deleteComposicaoByUsuario = async (req, res) => {
   try {
     const composicaoId = req.params.id;
     const { id } = req.body;
     const composicaoData = {id};
     
-    await composicoesUserModel.deletarComposicao(composicaoId, composicaoData);
+    await composicoesUserModel.deleteComposicaoByUsuario(composicaoId, composicaoData);
     
     res.status(200).json({ message: 'Composição deletada com sucesso.' });
   } catch (error) {
@@ -64,7 +64,7 @@ const deletarComposicao = async (req, res) => {
 
 module.exports = {
   getComposicoesByUsuarioId,
-  cadastrarComposicao,
-  atualizarComposicao,
-  deletarComposicao
+  postComposicaoByUsuario,
+  putComposicaoByUsuario,
+  deleteComposicaoByUsuario
 };

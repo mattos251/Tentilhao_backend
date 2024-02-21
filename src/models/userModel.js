@@ -2,40 +2,54 @@ const connection = require('../database/connection')
 const bcrypt = require('bcrypt');
 
 
+// const cadastrarUsuario = async (usuario) => {
+//   const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone } = usuario;
+
+//   const [result] = await connection.execute(`
+//         INSERT INTO usuarios 
+//         (nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone) 
+//         VALUES (?, ?, ?, ?, ?, ?)`,
+//     [nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone]
+//   );
+
+//   return result.insertId; // Retorna o ID do usuário recém-criado
+// };
+
 const cadastrarUsuario = async (usuario) => {
   const { nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone } = usuario;
 
-  const [result] = await connection.execute(`
-        INSERT INTO usuarios 
-        (nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone) 
-        VALUES (?, ?, ?, ?, ?, ?)`,
+  const { rows } = await connection.query(`
+    INSERT INTO usuarios 
+    (nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone) 
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
     [nome_completo, email, senha, tipo_usuario_id, genero_musical_id, numero_telefone]
   );
 
-  return result.insertId; // Retorna o ID do usuário recém-criado
+  return rows[0].id; // Retorna o ID do usuário recém-criado
 };
 
+
 const buscarUsuarios = async () => {
-  const [usuarios] = await connection.execute('SELECT * FROM usuarios');
+  const { rows: usuarios } = await connection.query('SELECT * FROM usuarios');
   return usuarios;
 };
 
 const getUserById = async (id) => {
-  const [usuario] = await connection.execute('SELECT * FROM usuarios WHERE id = ?', [id]);
-  return usuario.length > 0 ? usuario[0] : null;
+  const { rows: usuarios } = await connection.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+  return usuarios.length > 0 ? usuarios[0] : null;
 };
 
 const pesquisarUsuarios = async (termoPesquisa) => {
-  const [usuarios] = await connection.execute(
-    'SELECT * FROM usuarios WHERE nome_completo LIKE ? OR email LIKE ?',
-    [`%${termoPesquisa}%`, `%${termoPesquisa}%`]
+  const { rows: usuarios } = await connection.query(
+    'SELECT * FROM usuarios WHERE nome_completo ILIKE $1 OR email ILIKE $1',
+    [`%${termoPesquisa}%`]
   );
   return usuarios;
 };
 
 const putUser = async (id, newData) => {
   try {
-    // Converte o ID para um número inteiro
+
     const userId = id;
     console.log('userId ', userId )
 
@@ -44,19 +58,17 @@ const putUser = async (id, newData) => {
 
     const camposParaAtualizar = camposAtualizaveis.filter(campo => newData[campo] !== undefined);
 
-    console.log('camposParaAtualizar', camposParaAtualizar)
-
     if (camposParaAtualizar.length === 0) {
       return false;
     }
 
-    const camposQuery = camposParaAtualizar.map(campo => `${campo}=?`).join(', ');
+    const camposQuery = camposParaAtualizar.map((campo, index) => `${campo}=$${index + 1}`).join(', ');
     const valoresParaAtualizar = camposParaAtualizar.map(campo => newData[campo]);
-    const query = `UPDATE usuarios SET ${camposQuery} WHERE id=?`;
+    const query = `UPDATE usuarios SET ${camposQuery} WHERE id=$${camposParaAtualizar.length + 1}`;
 
-    const [result] = await connection.execute(query, [...valoresParaAtualizar, userId]);
+    const { rowCount } = await connection.query(query, [...valoresParaAtualizar, userId]);
 
-    return result.affectedRows > 0; // Retorna true se algum registro foi afetado (editado)
+    return rowCount > 0; // Retorna true se algum registro foi afetado (editado)
   } catch (error) {
     console.error('Erro ao editar usuário:', error);
     throw error;
@@ -64,16 +76,13 @@ const putUser = async (id, newData) => {
 };
 
 const buscarUsuarioPorEmailSenha = async (email, senha) => {
-  const [usuario] = await connection.execute(
-      'SELECT * FROM usuarios WHERE email = ?',
-      [email]
-  );
+  const { rows: usuarios } = await connection.query('SELECT * FROM usuarios WHERE email = $1', [email]);
 
-  const usuarioEncontrado = usuario.length > 0 ? usuario[0] : null;
+  const usuarioEncontrado = usuarios.length > 0 ? usuarios[0] : null;
 
   if (usuarioEncontrado) {
-      const senhaCorreta = await bcrypt.compare(senha, usuarioEncontrado.senha);
-      return senhaCorreta ? usuarioEncontrado : null;
+    const senhaCorreta = await bcrypt.compare(senha, usuarioEncontrado.senha);
+    return senhaCorreta ? usuarioEncontrado : null;
   }
 
   return null;
@@ -88,11 +97,11 @@ const putImageUser = async (id, newData) => {
       return false;
     }
 
-    const query = 'UPDATE usuarios SET imagem_perfil=? WHERE id=?';
+    const query = 'UPDATE usuarios SET imagem_perfil=$1 WHERE id=$2';
 
-    const [result] = await connection.execute(query, [imagem_perfil, userId]);
+    const { rowCount } = await connection.query(query, [imagem_perfil, userId]);
 
-    return result.affectedRows > 0;
+    return rowCount > 0;
   } catch (error) {
     console.error('Erro ao editar a imagem do usuário:', error);
     throw error;
